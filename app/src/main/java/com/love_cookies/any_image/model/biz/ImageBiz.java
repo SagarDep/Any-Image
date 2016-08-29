@@ -17,23 +17,28 @@ import org.xutils.x;
  */
 public class ImageBiz implements IImageBiz {
     /**
-     * 获取图片列表数量
+     * 获取图片列表
      * @param callBack
      */
     @Override
-    public void getImageList(CallBack callBack) {
+    public void getImageList(final CallBack callBack) {
         RequestParams requestParams = new RequestParams(AppConfig.IMAGE_API);
         x.http().get(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                String json_result = "{\"images\":" + result + "}";
-                Gson gson = new Gson();
-                ImageBean imageBean = gson.fromJson(json_result, ImageBean.class);
+                if (result != null) {
+                    String json_result = "{\"images\":" + result + "}";
+                    Gson gson = new Gson();
+                    ImageBean imageBean = gson.fromJson(json_result, ImageBean.class);
+                    callBack.onSuccess(imageBean);
+                } else {
+                    callBack.onFailed(null);
+                }
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-
+                callBack.onFailed(null);
             }
 
             @Override

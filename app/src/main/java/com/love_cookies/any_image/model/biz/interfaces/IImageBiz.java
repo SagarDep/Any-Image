@@ -9,7 +9,7 @@ import com.love_cookies.cookie_library.interfaces.CallBack;
  */
 public interface IImageBiz {
     /**
-     * 获取图片列表数量
+     * 获取图片列表
      * @param callBack
      */
     void getImageList(CallBack callBack);
