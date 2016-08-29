@@ -23,4 +23,10 @@ public interface IImage {
      * 获取图片列表失败
      */
     void getImageListFailed();
+
+    /**
+     * 设置图片列表
+     * @param imageBean
+     */
+    void setImageList(ImageBean imageBean);
 }
