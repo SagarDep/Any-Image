@@ -35,7 +35,7 @@ public class ImageBean {
         private int width;
         private int height;
         private String filename;
-        private int id;
+        private String id;
         private String author;
         private String author_url;
         private String post_url;
@@ -72,11 +72,11 @@ public class ImageBean {
             this.filename = filename;
         }
 
-        public int getId() {
+        public String getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(String id) {
             this.id = id;
         }
 

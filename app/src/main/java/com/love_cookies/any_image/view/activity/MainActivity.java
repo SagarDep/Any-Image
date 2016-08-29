@@ -92,7 +92,9 @@ public class MainActivity extends BaseActivity implements IImage {
         recyclerAdapter.setOnItemClickListener(new OnRecyclerItemClickListener() {
             @Override
             public void onItemClick(ViewGroup parent, View view, Object o, int position) {
-
+                Bundle bundle = new Bundle();
+                bundle.putString("id", images.get(position).getId());
+                turn(DetailActivity.class, bundle);
             }
 
             @Override
@@ -112,6 +114,10 @@ public class MainActivity extends BaseActivity implements IImage {
 
     }
 
+    /**
+     * 设置图片列表
+     * @param imageBean
+     */
     @Override
     public void setImageList(ImageBean imageBean) {
         images.addAll(imageBean.getImages());
