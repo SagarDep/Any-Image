@@ -2,6 +2,7 @@ package com.love_cookies.any_image.view.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +20,7 @@ import com.love_cookies.cookie_library.activity.BaseActivity;
 import com.love_cookies.cookie_library.adapter.CommonRecyclerAdapter;
 import com.love_cookies.cookie_library.adapter.CommonRecyclerViewHolder;
 import com.love_cookies.cookie_library.adapter.OnRecyclerItemClickListener;
+import com.love_cookies.cookie_library.utils.ScreenUtils;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -38,6 +40,8 @@ public class ImageActivity extends BaseActivity implements IImageView {
 
     @ViewInject(R.id.tool_bar)
     private Toolbar toolbar;
+    @ViewInject(R.id.refresh_layout)
+    private SwipeRefreshLayout swipeRefreshLayout;
     @ViewInject(R.id.recycler_view)
     private RecyclerView recyclerView;
     private CommonRecyclerAdapter recyclerAdapter;
@@ -52,6 +56,15 @@ public class ImageActivity extends BaseActivity implements IImageView {
      */
     @Override
     public void initWidget(Bundle savedInstanceState) {
+        toolbar.setTitleTextColor(Color.BLACK);
+        setSupportActionBar(toolbar);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getImageList();
+            }
+        });
+        swipeRefreshLayout.setProgressViewOffset(false, 0, ScreenUtils.dp2px(this, 24));
         getImageList();
     }
 
@@ -69,6 +82,7 @@ public class ImageActivity extends BaseActivity implements IImageView {
      */
     @Override
     public void getImageList() {
+        swipeRefreshLayout.setRefreshing(true);
         imagePresenter.getImageList();
     }
 
@@ -78,9 +92,7 @@ public class ImageActivity extends BaseActivity implements IImageView {
      */
     @Override
     public void getImageListSuccess(ImageBean imageBean) {
-        toolbar.setTitleTextColor(Color.BLACK);
-        setSupportActionBar(toolbar);
-
+        swipeRefreshLayout.setRefreshing(false);
         recyclerAdapter = new CommonRecyclerAdapter<ImageBean.ImagesBean>(this, R.layout.item_image_recycler_veiw, images) {
             @Override
             public void setData(CommonRecyclerViewHolder holder, ImageBean.ImagesBean imagesBean) {
@@ -111,7 +123,7 @@ public class ImageActivity extends BaseActivity implements IImageView {
      */
     @Override
     public void getImageListFailed() {
-
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     /**
