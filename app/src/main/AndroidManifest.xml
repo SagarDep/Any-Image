@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/CookieTheme"
         android:name=".app.AnyImageApplication">
-        <activity android:name=".view.activity.MainActivity">
+        <activity android:name=".view.activity.ImageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

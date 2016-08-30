@@ -2,7 +2,7 @@ package com.love_cookies.any_image.presenter;
 
 import com.love_cookies.any_image.model.bean.ImageBean;
 import com.love_cookies.any_image.model.biz.ImageBiz;
-import com.love_cookies.any_image.view.interfaces.IImage;
+import com.love_cookies.any_image.view.interfaces.IImageView;
 import com.love_cookies.cookie_library.interfaces.CallBack;
 
 /**
@@ -13,11 +13,11 @@ import com.love_cookies.cookie_library.interfaces.CallBack;
 public class ImagePresenter {
 
     private ImageBiz imageBiz;
-    private IImage iImage;
+    private IImageView iImageView;
 
-    public ImagePresenter(IImage iImage) {
+    public ImagePresenter(IImageView iImageView) {
         imageBiz = new ImageBiz();
-        this.iImage = iImage;
+        this.iImageView = iImageView;
     }
 
     /**
@@ -27,12 +27,12 @@ public class ImagePresenter {
         imageBiz.getImageList(new CallBack() {
             @Override
             public void onSuccess(Object result) {
-                iImage.getImageListSuccess((ImageBean)result);
+                iImageView.getImageListSuccess((ImageBean)result);
             }
 
             @Override
             public void onFailed(Object msg) {
-                iImage.getImageListFailed();
+                iImageView.getImageListFailed();
             }
         });
     }

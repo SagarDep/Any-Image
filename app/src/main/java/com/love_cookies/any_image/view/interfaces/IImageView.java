@@ -7,7 +7,7 @@ import com.love_cookies.any_image.model.bean.ImageBean;
  *
  * 图片页View接口
  */
-public interface IImage {
+public interface IImageView {
     /**
      * 获取图片列表
      */

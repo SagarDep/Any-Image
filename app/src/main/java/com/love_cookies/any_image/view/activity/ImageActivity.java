@@ -14,7 +14,7 @@ import com.love_cookies.any_image.app.AnyImageApplication;
 import com.love_cookies.any_image.config.AppConfig;
 import com.love_cookies.any_image.model.bean.ImageBean;
 import com.love_cookies.any_image.presenter.ImagePresenter;
-import com.love_cookies.any_image.view.interfaces.IImage;
+import com.love_cookies.any_image.view.interfaces.IImageView;
 import com.love_cookies.cookie_library.activity.BaseActivity;
 import com.love_cookies.cookie_library.adapter.CommonRecyclerAdapter;
 import com.love_cookies.cookie_library.adapter.CommonRecyclerViewHolder;
@@ -34,7 +34,7 @@ import java.util.List;
  * 主页
  */
 @ContentView(R.layout.activity_main)
-public class MainActivity extends BaseActivity implements IImage {
+public class ImageActivity extends BaseActivity implements IImageView {
 
     @ViewInject(R.id.tool_bar)
     private Toolbar toolbar;
