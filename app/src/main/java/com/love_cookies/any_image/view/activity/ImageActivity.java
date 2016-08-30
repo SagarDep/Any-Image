@@ -58,6 +58,27 @@ public class ImageActivity extends BaseActivity implements IImageView {
     public void initWidget(Bundle savedInstanceState) {
         toolbar.setTitleTextColor(Color.BLACK);
         setSupportActionBar(toolbar);
+        recyclerAdapter = new CommonRecyclerAdapter<ImageBean.ImagesBean>(this, R.layout.item_image_recycler_veiw, images) {
+            @Override
+            public void setData(CommonRecyclerViewHolder holder, ImageBean.ImagesBean imagesBean) {
+                x.image().bind((ImageView) holder.getView(R.id.image_view), AppConfig.IMAGE_960x540 + imagesBean.getId(), AnyImageApplication.NormalImageOptions);
+            }
+        };
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerAdapter.setOnItemClickListener(new OnRecyclerItemClickListener() {
+            @Override
+            public void onItemClick(ViewGroup parent, View view, Object o, int position) {
+                Bundle bundle = new Bundle();
+                bundle.putString("id", images.get(position).getId());
+                turn(DetailActivity.class, bundle);
+            }
+
+            @Override
+            public boolean onItemLongClick(ViewGroup parent, View view, Object o, int position) {
+                return true;
+            }
+        });
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -93,28 +114,6 @@ public class ImageActivity extends BaseActivity implements IImageView {
     @Override
     public void getImageListSuccess(ImageBean imageBean) {
         swipeRefreshLayout.setRefreshing(false);
-        recyclerAdapter = new CommonRecyclerAdapter<ImageBean.ImagesBean>(this, R.layout.item_image_recycler_veiw, images) {
-            @Override
-            public void setData(CommonRecyclerViewHolder holder, ImageBean.ImagesBean imagesBean) {
-                x.image().bind((ImageView) holder.getView(R.id.image_view), AppConfig.IMAGE_960x540 + imagesBean.getId(), AnyImageApplication.NormalImageOptions);
-            }
-        };
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(recyclerAdapter);
-        recyclerAdapter.setOnItemClickListener(new OnRecyclerItemClickListener() {
-            @Override
-            public void onItemClick(ViewGroup parent, View view, Object o, int position) {
-                Bundle bundle = new Bundle();
-                bundle.putString("id", images.get(position).getId());
-                turn(DetailActivity.class, bundle);
-            }
-
-            @Override
-            public boolean onItemLongClick(ViewGroup parent, View view, Object o, int position) {
-                return true;
-            }
-        });
-
         setImageList(imageBean);
     }
 
