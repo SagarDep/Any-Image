@@ -132,6 +132,7 @@ public class ImageActivity extends BaseActivity implements IImageView {
      */
     @Override
     public void setImageList(ImageBean imageBean) {
+        images.clear();
         images.addAll(imageBean.getImages());
         Collections.reverse(images);
         recyclerAdapter.notifyDataSetChanged();
