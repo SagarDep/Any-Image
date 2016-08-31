@@ -16,11 +16,11 @@ import com.love_cookies.any_image.config.AppConfig;
 import com.love_cookies.any_image.model.bean.ImageBean;
 import com.love_cookies.any_image.presenter.ImagePresenter;
 import com.love_cookies.any_image.view.interfaces.IImageView;
+import com.love_cookies.any_image.view.widget.AutoSwipeRefreshLayout;
 import com.love_cookies.cookie_library.activity.BaseActivity;
 import com.love_cookies.cookie_library.adapter.CommonRecyclerAdapter;
 import com.love_cookies.cookie_library.adapter.CommonRecyclerViewHolder;
 import com.love_cookies.cookie_library.adapter.OnRecyclerItemClickListener;
-import com.love_cookies.cookie_library.utils.ScreenUtils;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -40,8 +40,10 @@ public class ImageActivity extends BaseActivity implements IImageView {
 
     @ViewInject(R.id.tool_bar)
     private Toolbar toolbar;
-    @ViewInject(R.id.refresh_layout)
-    private SwipeRefreshLayout swipeRefreshLayout;
+    @ViewInject(R.id.refresh_layout_content)
+    private AutoSwipeRefreshLayout refreshLayoutContent;
+    @ViewInject(R.id.refresh_layout_empty)
+    private SwipeRefreshLayout refreshLayoutEmpty;
     @ViewInject(R.id.recycler_view)
     private RecyclerView recyclerView;
     private CommonRecyclerAdapter recyclerAdapter;
@@ -79,13 +81,21 @@ public class ImageActivity extends BaseActivity implements IImageView {
                 return true;
             }
         });
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        refreshLayoutContent.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                refreshLayoutContent.setRefreshing(true);
                 getImageList();
             }
         });
-        swipeRefreshLayout.setProgressViewOffset(false, 0, ScreenUtils.dp2px(this, 24));
+        refreshLayoutContent.autoRefresh();
+        refreshLayoutEmpty.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshLayoutEmpty.setRefreshing(true);
+                getImageList();
+            }
+        });
         getImageList();
     }
 
@@ -103,7 +113,6 @@ public class ImageActivity extends BaseActivity implements IImageView {
      */
     @Override
     public void getImageList() {
-        swipeRefreshLayout.setRefreshing(true);
         imagePresenter.getImageList();
     }
 
@@ -113,7 +122,10 @@ public class ImageActivity extends BaseActivity implements IImageView {
      */
     @Override
     public void getImageListSuccess(ImageBean imageBean) {
-        swipeRefreshLayout.setRefreshing(false);
+        refreshLayoutContent.setRefreshing(false);
+        refreshLayoutEmpty.setRefreshing(false);
+        refreshLayoutContent.setVisibility(View.VISIBLE);
+        refreshLayoutEmpty.setVisibility(View.GONE);
         setImageList(imageBean);
     }
 
@@ -122,7 +134,10 @@ public class ImageActivity extends BaseActivity implements IImageView {
      */
     @Override
     public void getImageListFailed() {
-        swipeRefreshLayout.setRefreshing(false);
+        refreshLayoutContent.setRefreshing(false);
+        refreshLayoutEmpty.setRefreshing(false);
+        refreshLayoutContent.setVisibility(View.GONE);
+        refreshLayoutEmpty.setVisibility(View.VISIBLE);
     }
 
     /**
