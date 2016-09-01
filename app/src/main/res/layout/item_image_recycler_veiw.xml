@@ -14,8 +14,8 @@
         android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="180dp"
         android:background="#22000000"
-        android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         android:layout_gravity="center"/>
 
