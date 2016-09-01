@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">任意图</string>
 
-    <string name="empty_error">获取数据出错</string>
+    <string name="empty_error">获取数据出错\n重新刷新试试看</string>
 </resources>
