@@ -6,9 +6,16 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
-    <com.love_cookies.cookie_library.widget.PinchImageView
-        android:id="@+id/image_iv"
+    <com.love_cookies.any_image.view.widget.AutoSwipeRefreshLayout
+        android:id="@+id/loading_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <com.love_cookies.cookie_library.widget.PinchImageView
+            android:id="@+id/image_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.love_cookies.any_image.view.widget.AutoSwipeRefreshLayout>
 
 </RelativeLayout>
