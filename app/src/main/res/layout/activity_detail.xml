@@ -18,4 +18,36 @@
 
     </com.love_cookies.any_image.view.widget.AutoSwipeRefreshLayout>
 
+    <ImageView
+        android:id="@+id/close_btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/menu_btn_close" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="20dp"
+        android:paddingRight="20dp">
+
+        <ImageView
+            android:id="@+id/save_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/menu_btn_bg"
+            android:src="@drawable/menu_btn_save" />
+
+        <ImageView
+            android:id="@+id/home_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@id/save_btn"
+            android:background="@drawable/menu_btn_bg"
+            android:src="@drawable/menu_btn_home" />
+
+    </RelativeLayout>
+
 </RelativeLayout>

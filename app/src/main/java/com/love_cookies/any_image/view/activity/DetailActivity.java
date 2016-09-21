@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.love_cookies.any_image.R;
 import com.love_cookies.any_image.app.AnyImageApplication;
@@ -27,6 +28,12 @@ import org.xutils.x;
 @ContentView(R.layout.activity_detail)
 public class DetailActivity extends BaseActivity {
 
+    @ViewInject(R.id.close_btn)
+    private ImageView closeBtn;
+    @ViewInject(R.id.save_btn)
+    private ImageView saveBtn;
+    @ViewInject(R.id.home_btn)
+    private ImageView homeBtn;
     @ViewInject(R.id.loading_layout)
     private AutoSwipeRefreshLayout loadingLayout;
     @ViewInject(R.id.image_iv)
@@ -39,6 +46,7 @@ public class DetailActivity extends BaseActivity {
     @Override
     public void initWidget(Bundle savedInstanceState) {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        closeBtn.setOnClickListener(this);
         //定位到屏幕中央
         loadingLayout.setProgressViewOffset(false, ScreenUtils.getScreenHeight(this) / 2, ScreenUtils.getScreenHeight(this) / 2);
         loadingLayout.autoRefresh();
@@ -46,6 +54,8 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onSuccess(Drawable result) {
                 imageView.setImageDrawable(result);
+                saveBtn.setOnClickListener(DetailActivity.this);
+                homeBtn.setOnClickListener(DetailActivity.this);
             }
 
             @Override
@@ -72,7 +82,19 @@ public class DetailActivity extends BaseActivity {
      */
     @Override
     public void widgetClick(View view) {
-
+        switch (view.getId()) {
+            case R.id.close_btn:
+                finish();
+                break;
+            case R.id.save_btn:
+                ToastUtils.show(this, "save");
+                break;
+            case R.id.home_btn:
+                ToastUtils.show(this, "home");
+                break;
+            default:
+                break;
+        }
     }
 
 }
