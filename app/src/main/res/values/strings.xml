@@ -2,4 +2,11 @@
     <string name="app_name">任意图</string>
 
     <string name="empty_error">获取数据出错\n重新刷新试试看</string>
+
+    <string name="image_save_success">图片保存成功\n（%s）</string>
+    <string name="image_save_failed">图片保存失败</string>
+    <string name="image_exists">图片已保存\n（%s）</string>
+    <string name="wallpaper_success">设置壁纸成功</string>
+    <string name="wallpaper_failed">设置壁纸失败</string>
+
 </resources>

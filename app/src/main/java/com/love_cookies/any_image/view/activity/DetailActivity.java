@@ -1,5 +1,8 @@
 package com.love_cookies.any_image.view.activity;
 
+import android.app.WallpaperManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +12,8 @@ import android.widget.ImageView;
 import com.love_cookies.any_image.R;
 import com.love_cookies.any_image.app.AnyImageApplication;
 import com.love_cookies.any_image.config.AppConfig;
+import com.love_cookies.any_image.presenter.DetailPresenter;
+import com.love_cookies.any_image.view.interfaces.IDetailView;
 import com.love_cookies.any_image.view.widget.AutoSwipeRefreshLayout;
 import com.love_cookies.cookie_library.activity.BaseActivity;
 import com.love_cookies.cookie_library.utils.ScreenUtils;
@@ -20,13 +25,15 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.File;
+
 /**
  * Created by xiekun on 2016/8/29 0029.
  *
  * 图片详情页
  */
 @ContentView(R.layout.activity_detail)
-public class DetailActivity extends BaseActivity {
+public class DetailActivity extends BaseActivity implements IDetailView {
 
     @ViewInject(R.id.close_btn)
     private ImageView closeBtn;
@@ -39,6 +46,11 @@ public class DetailActivity extends BaseActivity {
     @ViewInject(R.id.image_iv)
     private PinchImageView imageView;
 
+    private DetailPresenter detailPresenter = new DetailPresenter(this);
+
+    private String imageUrl = "";
+    private String imagePath = "";
+
     /**
      * 初始化控件
      * @param savedInstanceState
@@ -46,11 +58,13 @@ public class DetailActivity extends BaseActivity {
     @Override
     public void initWidget(Bundle savedInstanceState) {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        imageUrl = AppConfig.IMAGE_1920x1080 + getIntent().getExtras().getString("id");
+        imagePath = AnyImageApplication.FILE_PATH + getIntent().getExtras().getString("id") + ".jpg";
         closeBtn.setOnClickListener(this);
         //定位到屏幕中央
         loadingLayout.setProgressViewOffset(false, ScreenUtils.getScreenHeight(this) / 2, ScreenUtils.getScreenHeight(this) / 2);
         loadingLayout.autoRefresh();
-        x.image().loadDrawable(AppConfig.IMAGE_1920x1080 + getIntent().getExtras().getString("id"), AnyImageApplication.NormalImageOptions, new Callback.CommonCallback<Drawable>() {
+        x.image().loadDrawable(imageUrl, AnyImageApplication.NormalImageOptions, new Callback.CommonCallback<Drawable>() {
             @Override
             public void onSuccess(Drawable result) {
                 imageView.setImageDrawable(result);
@@ -87,14 +101,103 @@ public class DetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.save_btn:
-                ToastUtils.show(this, "save");
+                saveBtn.setEnabled(false);
+                loadingLayout.setRefreshing(true);
+                downloadFile(imageUrl);
                 break;
             case R.id.home_btn:
-                ToastUtils.show(this, "home");
+                homeBtn.setEnabled(false);
+                loadingLayout.setRefreshing(true);
+                getAndSetWallpaper(imageUrl);
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 下载文件
+     * @param url
+     */
+    public void downloadFile(String url) {
+        File file = new File(imagePath);
+        if (!file.exists()) {
+            detailPresenter.downloadFile(url, imagePath);
+        } else {
+            saveBtn.setEnabled(true);
+            loadingLayout.setRefreshing(false);
+            ToastUtils.show(DetailActivity.this, String.format(getString(R.string.image_exists), imagePath));
+        }
+    }
+
+    /**
+     * 获取设置壁纸的资源
+     */
+    public void getAndSetWallpaper(String url) {
+        File file = new File(imagePath);
+        if (!file.exists()) {
+            detailPresenter.getWallpaper(url, imagePath);
+        } else {
+            homeBtn.setEnabled(true);
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            setPhoneWallpaper(bitmap);
+        }
+    }
+
+    /**
+     * 设置为壁纸
+     * @param bitmap
+     */
+    public void setPhoneWallpaper(Bitmap bitmap) {
+        try {
+            WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
+            wallpaperManager.setBitmap(bitmap);
+            loadingLayout.setRefreshing(false);
+            ToastUtils.show(DetailActivity.this, R.string.wallpaper_success);
+        } catch (Exception e) {
+            loadingLayout.setRefreshing(false);
+            ToastUtils.show(DetailActivity.this, R.string.wallpaper_failed);
+        }
+    }
+
+    /**
+     * 下载文件成功
+     */
+    @Override
+    public void downloadFileSuccess() {
+        saveBtn.setEnabled(true);
+        loadingLayout.setRefreshing(false);
+        ToastUtils.show(DetailActivity.this, String.format(getString(R.string.image_save_success), imagePath));
+    }
+
+    /**
+     * 下载文件失败
+     */
+    @Override
+    public void downloadFileFailed() {
+        saveBtn.setEnabled(true);
+        loadingLayout.setRefreshing(false);
+        ToastUtils.show(DetailActivity.this, R.string.image_save_failed);
+    }
+
+    /**
+     * 获取壁纸成功
+     */
+    @Override
+    public void getWallpaperSuccess() {
+        homeBtn.setEnabled(true);
+        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+        setPhoneWallpaper(bitmap);
+    }
+
+    /**
+     * 获取壁纸失败
+     */
+    @Override
+    public void getWallpaperFailed() {
+        homeBtn.setEnabled(true);
+        loadingLayout.setRefreshing(false);
+        ToastUtils.show(DetailActivity.this, R.string.wallpaper_failed);
     }
 
 }
