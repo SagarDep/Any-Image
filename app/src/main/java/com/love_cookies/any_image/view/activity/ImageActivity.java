@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,6 +22,8 @@ import com.love_cookies.cookie_library.activity.BaseActivity;
 import com.love_cookies.cookie_library.adapter.CommonRecyclerAdapter;
 import com.love_cookies.cookie_library.adapter.CommonRecyclerViewHolder;
 import com.love_cookies.cookie_library.adapter.OnRecyclerItemClickListener;
+import com.love_cookies.cookie_library.application.ActivityCollections;
+import com.love_cookies.cookie_library.utils.ToastUtils;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -37,6 +40,8 @@ import java.util.List;
  */
 @ContentView(R.layout.activity_main)
 public class ImageActivity extends BaseActivity implements IImageView {
+
+    private long exitTime;
 
     @ViewInject(R.id.tool_bar)
     private Toolbar toolbar;
@@ -150,5 +155,27 @@ public class ImageActivity extends BaseActivity implements IImageView {
         images.addAll(imageBean.getImages());
         Collections.reverse(images);
         recyclerAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 点两次返回退出程序
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {//点击两次退出逻辑
+                ToastUtils.show(this, R.string.exit_tip);
+                exitTime = System.currentTimeMillis();
+            } else {
+                ActivityCollections.getInstance().finishAllActivity();
+                android.os.Process.killProcess(android.os.Process.myPid());
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
