@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -50,6 +52,25 @@ public class DetailActivity extends BaseActivity implements IDetailView {
 
     private String imageUrl = "";
     private String imagePath = "";
+
+    private static final int WALLPAPER_SUCCESS = 0x01;
+    private static final int WALLPAPER_FAILED = 0x02;
+    private Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case WALLPAPER_SUCCESS:
+                    ToastUtils.show(DetailActivity.this, R.string.wallpaper_success);
+                    break;
+                case WALLPAPER_FAILED:
+                    ToastUtils.show(DetailActivity.this, R.string.wallpaper_failed);
+                    break;
+                default:
+                    break;
+            }
+            homeBtn.setEnabled(true);
+            loadingLayout.setRefreshing(false);
+        }
+    };
 
     /**
      * 初始化控件
@@ -138,7 +159,6 @@ public class DetailActivity extends BaseActivity implements IDetailView {
         if (!file.exists()) {
             detailPresenter.getWallpaper(url, imagePath);
         } else {
-            homeBtn.setEnabled(true);
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
             setPhoneWallpaper(bitmap);
         }
@@ -148,16 +168,22 @@ public class DetailActivity extends BaseActivity implements IDetailView {
      * 设置为壁纸
      * @param bitmap
      */
-    public void setPhoneWallpaper(Bitmap bitmap) {
-        try {
-            WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
-            wallpaperManager.setBitmap(bitmap);
-            loadingLayout.setRefreshing(false);
-            ToastUtils.show(DetailActivity.this, R.string.wallpaper_success);
-        } catch (Exception e) {
-            loadingLayout.setRefreshing(false);
-            ToastUtils.show(DetailActivity.this, R.string.wallpaper_failed);
-        }
+    public void setPhoneWallpaper(final Bitmap bitmap) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message message = new Message();
+                try {
+                    WallpaperManager wallpaperManager = WallpaperManager.getInstance(DetailActivity.this);
+                    wallpaperManager.setBitmap(bitmap);
+                    message.what = WALLPAPER_SUCCESS;
+                } catch (Exception e) {
+                    message.what = WALLPAPER_FAILED;
+                } finally {
+                    handler.sendMessage(message);
+                }
+            }
+        }).start();
     }
 
     /**
@@ -185,7 +211,6 @@ public class DetailActivity extends BaseActivity implements IDetailView {
      */
     @Override
     public void getWallpaperSuccess() {
-        homeBtn.setEnabled(true);
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
         setPhoneWallpaper(bitmap);
     }
