@@ -1,5 +1,6 @@
 package com.love_cookies.any_image.view.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +11,16 @@ import com.love_cookies.any_image.R;
 import com.love_cookies.cookie_library.activity.BaseActivity;
 
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
+
+import su.levenetc.android.textsurface.Text;
+import su.levenetc.android.textsurface.TextBuilder;
+import su.levenetc.android.textsurface.TextSurface;
+import su.levenetc.android.textsurface.animations.Alpha;
+import su.levenetc.android.textsurface.animations.Slide;
+import su.levenetc.android.textsurface.contants.Align;
+import su.levenetc.android.textsurface.contants.Side;
+import su.levenetc.android.textsurface.contants.TYPE;
 
 /**
  * Created by xiekun on 2016/09/28 0028.
@@ -19,7 +30,10 @@ import org.xutils.view.annotation.ContentView;
 @ContentView(R.layout.activity_splash)
 public class SplashActivity extends BaseActivity {
 
-    private final int SPLASH_DISPLAY_DURATION = 1500;//启动页显示时长
+    @ViewInject(R.id.text_surface)
+    private TextSurface textSurface;
+
+    private final int SPLASH_DISPLAY_DURATION = 2000;//启动页显示时长
     private Looper looper = Looper.myLooper();
     private Handler handler = new Handler(looper);
     private Runnable runnable = new Runnable() {
@@ -35,6 +49,7 @@ public class SplashActivity extends BaseActivity {
      */
     @Override
     public void initWidget(Bundle savedInstanceState) {
+        setTitleAnimation();
         handler.postDelayed(runnable, SPLASH_DISPLAY_DURATION);
     }
 
@@ -45,6 +60,33 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void widgetClick(View v) {
 
+    }
+
+    /**
+     * 设置标题动画
+     */
+    public void setTitleAnimation() {
+        Text textOne = TextBuilder
+                .create(getString(R.string.app_name))
+                .setSize(65)
+                .setAlpha(0)
+                .setColor(Color.BLACK)
+                .setPosition(Align.SURFACE_CENTER)
+                .build();
+
+        Text textTwo = TextBuilder
+                .create(getString(R.string.splash_from_text))
+                .setSize(15)
+                .setAlpha(100)
+                .setColor(Color.BLACK)
+                .setPosition(Align.BOTTOM_OF | Align.CENTER_OF, textOne)
+                .build();
+
+        textSurface.play(
+                TYPE.SEQUENTIAL,
+                Alpha.show(textOne, 600),
+                Slide.showFrom(Side.TOP, textTwo, 1000)
+        );
     }
 
     /**
