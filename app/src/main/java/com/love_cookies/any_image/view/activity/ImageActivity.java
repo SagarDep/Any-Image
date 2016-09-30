@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -59,6 +61,7 @@ public class ImageActivity extends BaseActivity implements IImageView {
 
     /**
      * 初始化控件
+     *
      * @param savedInstanceState
      */
     @Override
@@ -106,6 +109,7 @@ public class ImageActivity extends BaseActivity implements IImageView {
 
     /**
      * 控件点击
+     *
      * @param view
      */
     @Override
@@ -123,6 +127,7 @@ public class ImageActivity extends BaseActivity implements IImageView {
 
     /**
      * 获取图片列表成功
+     *
      * @param imageBean
      */
     @Override
@@ -147,6 +152,7 @@ public class ImageActivity extends BaseActivity implements IImageView {
 
     /**
      * 设置图片列表
+     *
      * @param imageBean
      */
     @Override
@@ -177,5 +183,34 @@ public class ImageActivity extends BaseActivity implements IImageView {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * 设置菜单
+     *
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    /**
+     * 菜单选中
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_about:
+                ToastUtils.show(this, R.string.app_name);
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
