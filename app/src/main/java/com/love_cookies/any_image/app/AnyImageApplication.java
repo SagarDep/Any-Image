@@ -19,6 +19,8 @@ public class AnyImageApplication extends BaseApplication {
 
     //一般图片设置
     public static ImageOptions NormalImageOptions = null;
+    //一般图片设置-淡入
+    public static ImageOptions NormalFadeInImageOptions = null;
     //圆形图片设置
     public static ImageOptions RoundImageOptions = null;
     //方形圆角图片设置
@@ -40,6 +42,11 @@ public class AnyImageApplication extends BaseApplication {
     public void initImageOptions() {
         NormalImageOptions = new ImageOptions.Builder()
                 .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                .build();
+
+        NormalFadeInImageOptions = new ImageOptions.Builder()
+                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                .setFadeIn(true)
                 .build();
 
         RoundImageOptions = new ImageOptions.Builder()

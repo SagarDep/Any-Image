@@ -3,7 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/BLACK_A60">
+    
+    <ImageView
+        android:id="@+id/splash_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/BLACK_A60" />
 
     <su.levenetc.android.textsurface.TextSurface
         android:id="@+id/text_surface"
@@ -20,7 +31,7 @@
         android:gravity="center"
         android:padding="5dp"
         android:text="@string/app_right"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="14sp" />
 
 </RelativeLayout>

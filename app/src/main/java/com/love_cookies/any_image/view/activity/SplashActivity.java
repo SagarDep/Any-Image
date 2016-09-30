@@ -6,12 +6,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.love_cookies.any_image.R;
+import com.love_cookies.any_image.app.AnyImageApplication;
 import com.love_cookies.cookie_library.activity.BaseActivity;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
 import su.levenetc.android.textsurface.Text;
 import su.levenetc.android.textsurface.TextBuilder;
@@ -30,10 +33,12 @@ import su.levenetc.android.textsurface.contants.TYPE;
 @ContentView(R.layout.activity_splash)
 public class SplashActivity extends BaseActivity {
 
+    @ViewInject(R.id.splash_image)
+    private ImageView splashImage;
     @ViewInject(R.id.text_surface)
     private TextSurface textSurface;
 
-    private final int SPLASH_DISPLAY_DURATION = 2000;//启动页显示时长
+    private final int SPLASH_DISPLAY_DURATION = 3000;//启动页显示时长
     private Looper looper = Looper.myLooper();
     private Handler handler = new Handler(looper);
     private Runnable runnable = new Runnable() {
@@ -49,6 +54,7 @@ public class SplashActivity extends BaseActivity {
      */
     @Override
     public void initWidget(Bundle savedInstanceState) {
+        x.image().bind(splashImage, "assets://splash_bg.jpg", AnyImageApplication.NormalFadeInImageOptions);
         setTitleAnimation();
         handler.postDelayed(runnable, SPLASH_DISPLAY_DURATION);
     }
@@ -70,7 +76,7 @@ public class SplashActivity extends BaseActivity {
                 .create(getString(R.string.app_name))
                 .setSize(65)
                 .setAlpha(0)
-                .setColor(Color.BLACK)
+                .setColor(Color.WHITE)
                 .setPosition(Align.SURFACE_CENTER)
                 .build();
 
@@ -78,14 +84,14 @@ public class SplashActivity extends BaseActivity {
                 .create(getString(R.string.splash_from_text))
                 .setSize(15)
                 .setAlpha(100)
-                .setColor(Color.BLACK)
+                .setColor(Color.WHITE)
                 .setPosition(Align.BOTTOM_OF | Align.CENTER_OF, textOne)
                 .build();
 
         textSurface.play(
                 TYPE.SEQUENTIAL,
-                Alpha.show(textOne, 600),
-                Slide.showFrom(Side.TOP, textTwo, 1000)
+                Alpha.show(textOne, 800),
+                Slide.showFrom(Side.TOP, textTwo, 1200)
         );
     }
 
