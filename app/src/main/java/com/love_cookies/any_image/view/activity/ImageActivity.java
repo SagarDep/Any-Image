@@ -206,7 +206,7 @@ public class ImageActivity extends BaseActivity implements IImageView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_about:
-                ToastUtils.show(this, R.string.app_name);
+                turn(AboutActivity.class);
                 break;
             default:
                 break;
