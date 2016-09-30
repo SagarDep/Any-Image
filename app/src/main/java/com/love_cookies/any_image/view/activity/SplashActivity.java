@@ -81,7 +81,7 @@ public class SplashActivity extends BaseActivity {
                 .build();
 
         Text textTwo = TextBuilder
-                .create(getString(R.string.splash_from_text))
+                .create(getString(R.string.from_text))
                 .setSize(15)
                 .setAlpha(100)
                 .setColor(Color.WHITE)
